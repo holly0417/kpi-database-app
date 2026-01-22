@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <title>KPI Library</title>
+    <script src="{% static 'js/vue.global.prod.js' %}"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>[[ heading ]]</h1>
+      <p>Counter: [[ count ]]</p>
+      <button @click="count++">Increment</button>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        delimiters: ["[[", "]]"],
+        data() {
+          return {
+            heading: "KPI Library",
+            count: 0,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
