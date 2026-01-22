@@ -4,16 +4,38 @@
   <head>
     <title>KPI Library</title>
     <script src="{% static 'js/vue.global.prod.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
   </head>
   <body>
     <div id="app">
       <h1>[[ heading ]]</h1>
       <p>Counter: [[ count ]]</p>
       <button @click="count++">Increment</button>
+      <button @click="loadKpis">Load KPIs</button>
+
+      <ul>
+        <li v-for="k in kpis" :key="k.id">
+          [[ k.name ]] ([[ k.unit || 'no unit' ]])
+        </li>
+      </ul>
     </div>
 
     <script>
       const { createApp } = Vue;
+
+      function useApi() {
+        const client = axios.create({
+          baseURL: "http://127.0.0.1:8000",
+          timeout: 5000,
+        });
+
+        async function getKpis() {
+          const res = await client.get("/api/kpis/");
+          return res.data;
+        }
+
+        return { getKpis };
+      }
 
       createApp({
         delimiters: ["[[", "]]"],
@@ -21,7 +43,14 @@
           return {
             heading: "KPI Library",
             count: 0,
+            kpis: [],
           };
+        },
+        methods: {
+          async loadKpis() {
+            const api = useApi();
+            this.kpis = await api.getKpis();
+          },
         },
       }).mount("#app");
     </script>

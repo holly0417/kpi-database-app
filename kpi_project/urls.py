@@ -15,10 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from kpi_app import views
+from django.urls import path, include
+
+# kpi_project/urls.py = global entry router.
+# kpi_app/urls.py = app‑specific routes, which are included into the project.
+
+#kpi_project = global configurations for whole site
+#kpi_app = self-contained app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path("", include("kpi_app.urls")),
 ]
