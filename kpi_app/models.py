@@ -1,55 +1,100 @@
 from django.db import models
 
+
 # Create your models here.
 # Persistence layer managed by Django ORM
 
-class gics_sector(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
+class GICSSector(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
 
-class gics_industry_group(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
-    sector = models.ForeignKey(gics_sector, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.code} - {self.name}"
 
-class gics_industry(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
-    industry_group = models.ForeignKey(gics_industry_group, on_delete=models.CASCADE)
 
-class gics_sub_industry(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
-    industry = models.ForeignKey(gics_industry, on_delete=models.CASCADE)
+class GICSIndustryGroup(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    sector = models.ForeignKey(GICSSector,
+                                    on_delete=models.PROTECT,
+                                    related_name="industry_groups")
 
-class icb_industry(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
+    def __str__(self):
+        return f"{self.code} - {self.name}"
 
-class icb_super_sector(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
-    industry = models.ForeignKey(icb_industry, on_delete=models.CASCADE)
 
-class icb_sector(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
-    super_sector = models.ForeignKey(icb_super_sector, on_delete=models.CASCADE)
+class GICSIndustry(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    industry_group = models.ForeignKey(GICSIndustryGroup,
+                                            on_delete=models.PROTECT,
+                                            related_name="industries")
 
-class icb_sub_sector(models.Model):
-    code = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=200, unique=True)
-    sector = models.ForeignKey(icb_sector, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.code} - {self.name}"
 
-class Industry(models.Model):
+
+class GICSSubIndustry(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    industry = models.ForeignKey(GICSIndustry,
+                                      on_delete=models.PROTECT,
+                                      related_name="subindustries")
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class ISICSector(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class ISICIndustryGroup(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    sector = models.ForeignKey(ISICSector,
+                                    on_delete=models.PROTECT,
+                                    related_name="industry_groups")
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class ISICIndustry(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    industry_group = models.ForeignKey(ISICIndustryGroup,
+                                            on_delete=models.PROTECT,
+                                            related_name="industries")
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class ISICSubIndustry(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    industry = models.ForeignKey(ISICIndustry,
+                                      on_delete=models.PROTECT,
+                                      related_name="subindustries")
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class Sector(models.Model):
     name = models.CharField(max_length=200, unique=True)
     gics_sector = models.ForeignKey(
-        gics_sector,
+        GICSSector,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
-    icb_industry = models.ForeignKey(
-        icb_industry,
+    isic_sector = models.ForeignKey(
+        ISICSector,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
@@ -59,15 +104,16 @@ class Industry(models.Model):
     def __str__(self):
         return self.name
 
-class Subindustry(models.Model):
+
+class IndustryGroup(models.Model):
     name = models.CharField(max_length=200, unique=True)
     gics_industry_group = models.ForeignKey(
-        gics_industry_group,
+        GICSIndustryGroup,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
-    icb_super_sector = models.ForeignKey(
-        icb_super_sector,
+    isic_industry_group = models.ForeignKey(
+        ISICIndustryGroup,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
@@ -75,15 +121,16 @@ class Subindustry(models.Model):
     def __str__(self):
         return self.name
 
-class Sector(models.Model):
+
+class Industry(models.Model):
     name = models.CharField(max_length=200, unique=True)
     gics_industry = models.ForeignKey(
-        gics_industry,
+        GICSIndustry,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
-    icb_sector = models.ForeignKey(
-        icb_sector,
+    isic_industry = models.ForeignKey(
+        ISICIndustry,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
@@ -91,21 +138,23 @@ class Sector(models.Model):
     def __str__(self):
         return self.name
 
-class Subsector(models.Model):
+
+class Subindustry(models.Model):
     name = models.CharField(max_length=200, unique=True)
     gics_sub_industry = models.ForeignKey(
-        gics_sub_industry,
+        GICSSubIndustry,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
-    icb_sub_sector = models.ForeignKey(
-        icb_sub_sector,
+    isic_sub_industry = models.ForeignKey(
+        ISICSubIndustry,
         null=True, blank=True,
         on_delete=models.SET_NULL,
     )
 
     def __str__(self):
         return self.name
+
 
 class KPI(models.Model):
     DIRECTION_CHOICES = [
@@ -123,26 +172,27 @@ class KPI(models.Model):
     )
     frequency = models.CharField(max_length=50, blank=True, null=True)
 
+
 class KPIIndustry(models.Model):
     kpi = models.ForeignKey(KPI, on_delete=models.CASCADE)
-    industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
-    subindustry = models.ForeignKey(Subindustry, on_delete=models.CASCADE)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
-    subsector = models.ForeignKey(Subsector, on_delete=models.CASCADE)
+    industry_group = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
+    industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
+    sub_industry = models.ForeignKey(Subindustry, on_delete=models.CASCADE)
     relevance = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        unique_together = ("kpi", "subsector")
+        unique_together = ("kpi", "sub_industry")
 
 
 class Benchmark(models.Model):
     kpi = models.ForeignKey(KPI, on_delete=models.CASCADE)
-    industry = models.ForeignKey(Industry, null=True, blank=True, on_delete=models.SET_NULL)
-    subindustry = models.ForeignKey(Subindustry, null=True, blank=True, on_delete=models.SET_NULL)
     sector = models.ForeignKey(Sector, null=True, blank=True, on_delete=models.SET_NULL)
-    subsector = models.ForeignKey(Subsector, null=True, blank=True, on_delete=models.SET_NULL)
+    industry_group = models.ForeignKey(IndustryGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    industry = models.ForeignKey(Industry, null=True, blank=True, on_delete=models.SET_NULL)
+    sub_industry = models.ForeignKey(Subindustry, null=True, blank=True, on_delete=models.SET_NULL)
     geography = models.CharField(max_length=100, blank=True, null=True)
-    company_size = models.CharField(max_length=100, blank=True, null=True)
+    company = models.CharField(max_length=100, blank=True, null=True)
     period = models.CharField(max_length=50, blank=True, null=True)
     value_type = models.CharField(max_length=50, blank=True, null=True)
     value_low = models.FloatField(blank=True, null=True)

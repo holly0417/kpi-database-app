@@ -2,24 +2,52 @@
 {% load static %}
 <html>
   <head>
-    <title>KPI Library</title>
-    <script src="{% static 'js/vue.global.prod.js' %}"></script>
-    <script src="{% static 'js/axios.min.js' %}"></script>
+    <title>Classifications Library</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/quasar@2.18.6/dist/quasar.prod.css"
+    />
   </head>
   <body>
     <div id="app">
-      <h1>[[ heading ]]</h1>
-      <p>Counter: [[ count ]]</p>
-      <button @click="count++">Increment</button>
-      <button @click="loadKpis">Load KPIs</button>
+      <q-layout view="hHh lpR fFf">
+        <q-header elevated>
+          <q-toolbar>
+            <q-toolbar-title>[[ heading ]]</q-toolbar-title>
+          </q-toolbar>
+        </q-header>
 
-      <ul>
-        <li v-for="k in kpis" :key="k.id">
-          [[ k.name ]] ([[ k.unit || 'no unit' ]])
-        </li>
-      </ul>
+        <q-page-container>
+          <q-page padding>
+            <div class="q-pa-md row items-start q-gutter-md">
+
+              <q-card
+                class="my-card text-white"
+                style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+              >
+                <q-card-section>
+                  <q-btn color="primary" label="Load GICS" @click="loadGICS" />
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <ul>
+                    <li v-for="g in gics" :key="g.code">
+                      [[ g.code ]] ([[ g.name || 'no unit' ]])
+                    </li>
+                  </ul>
+                </q-card-section>
+              </q-card>
+
+
+            </div>
+          </q-page>
+        </q-page-container>
+      </q-layout>
     </div>
 
+    <script src="{% static 'js/vue.global.prod.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    <script src="{% static 'js/quasar.umd.prod.js' %}"></script>
     <script>
       const { createApp } = Vue;
 
@@ -29,30 +57,29 @@
           timeout: 5000,
         });
 
-        async function getKpis() {
-          const res = await client.get("/api/kpis/");
+        async function getGICS() {
+          const res = await client.get("/api/gics/");
           return res.data;
         }
 
-        return { getKpis };
+        return { getGICS };
       }
 
       createApp({
         delimiters: ["[[", "]]"],
         data() {
           return {
-            heading: "KPI Library",
-            count: 0,
-            kpis: [],
+            heading: "Holly's Categorization Library",
+            gics: [],
           };
         },
         methods: {
-          async loadKpis() {
+          async loadGICS() {
             const api = useApi();
-            this.kpis = await api.getKpis();
+            this.gics = await api.getGICS();
           },
         },
-      }).mount("#app");
+      }).use(Quasar).mount("#app");
     </script>
   </body>
 </html>
