@@ -4,12 +4,21 @@ from django.http import JsonResponse, Http404, HttpResponse, FileResponse
 from django.conf import settings
 from pathlib import Path
 
-from .models import KPI, GICSSector
+from rest_framework import status
+from rest_framework.views import APIView
+
+from .models import Industry, KPI, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
+from .serializers import GICSSectorSerializer
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .services import find_all_sectors, find_industry_group, find_industry, find_subindustry
 
 from django.shortcuts import render
 
 # Create your views here.
 SPA_ROOT = Path(settings.BASE_DIR) / "frontend" / "dist" / "spa"
+
 
 def spa_view(request, resource_path: str = ""):
     # Normalize the requested path (e.g. "js/app.js", "", "some/route")
@@ -32,24 +41,34 @@ def spa_view(request, resource_path: str = ""):
 
     return FileResponse(open(index_path, "rb"), content_type="text/html")
 
-def example_view(request):
-    data = {"message": "Hello from Django"}
-    return JsonResponse(data)
 
 # def home(request):
 #     # You can pass data to the template here
 #     return render(request, "home.html")
 # #
-def gics_sector_list_api(request):
-    data = [
-        {
-            "code": gs.code,
-            "name": gs.name,
-        }
-        for gs in GICSSector.objects.all()
-    ]
-    return JsonResponse(data, safe=False)
-#
+class GicsSectorList(APIView):
+    def get(self, request):
+        data = find_all_sectors()
+        return JsonResponse(data, safe=False)
+
+class GicsIndustryGroupList(APIView):
+    def get(self, request, *args, **kwargs):
+        sector_code = request.query_params.get("sector_code")  # same as GET
+        data = find_industry_group(str(sector_code))
+        return JsonResponse(data, safe=False)
+
+class GicsIndustryList(APIView):
+    def get(self, request, *args, **kwargs):
+        industry_group_code = request.query_params.get("industry_group_code")  # same as GET
+        data = find_industry(str(industry_group_code))
+        return JsonResponse(data, safe=False)
+
+class GicsSubIndustryList(APIView):
+    def get(self, request, *args, **kwargs):
+        industry_code = request.query_params.get("industry_code")  # same as GET
+        data = find_subindustry(str(industry_code))
+        return JsonResponse(data, safe=False)
+
 # def kpi_list_api(request):
 #     data = [
 #         {

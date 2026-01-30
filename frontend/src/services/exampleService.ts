@@ -1,4 +1,4 @@
-import apiClient from "./api";
+import { api } from "src/boot/axios";
 import type { GICSResponse } from "src/components/models";
 
 export interface ExampleResponse {
@@ -6,11 +6,35 @@ export interface ExampleResponse {
 }
 
 export async function fetchExample(): Promise<ExampleResponse> {
-  const response = await apiClient.get<ExampleResponse>("example/"); // GET /api/example/
+  const response = await api.get<ExampleResponse>("example/"); // GET /api/example/
   return response.data;
 }
 
 export async function fetchGICS(): Promise<GICSResponse[]> {
-  const response = await apiClient.get<GICSResponse[]>("gics/");
+  const response = await api.get<GICSResponse[]>("gics/");
   return response.data;
+}
+
+export async function fetchGICSIndustryGroups(sector_code: number): Promise<GICSResponse[]> {
+  return (await api.get<GICSResponse[]>("gics/industry-groups/", {
+    params: {
+      sector_code: sector_code,
+    }
+  })).data;
+}
+
+export async function fetchGICSIndustries(industry_group_code: number): Promise<GICSResponse[]> {
+  return (await api.get<GICSResponse[]>("gics/industries/", {
+    params: {
+      industry_group_code: industry_group_code,
+    }
+  })).data;
+}
+
+export async function fetchGICSSubIndustries(industry_code: number): Promise<GICSResponse[]> {
+  return (await api.get<GICSResponse[]>("gics/subindustries/", {
+    params: {
+      industry_code: industry_code,
+    }
+  })).data;
 }
