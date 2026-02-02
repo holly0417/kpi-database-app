@@ -8,11 +8,11 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from .models import Industry, KPI, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
-from .serializers import GICSSectorSerializer
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .services import find_all_sectors, find_industry_group, find_industry, find_subindustry
+from .services import find_all_sectors, find_industry_group, find_industry, find_subindustry, list_all_kpis
+from .serializers import KPISerializer
 
 from django.shortcuts import render
 
@@ -68,6 +68,19 @@ class GicsSubIndustryList(APIView):
         industry_code = request.query_params.get("industry_code")  # same as GET
         data = find_subindustry(str(industry_code))
         return JsonResponse(data, safe=False)
+
+class KPIList(APIView):
+    def get(self, request):
+        kpis = KPI.objects.all()
+        serializer = KPISerializer(kpis, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = KPISerializer(data=request.data)
+        if serializer.is_valid():
+            kpi = serializer.save()
+            return Response(KPISerializer(kpi).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # def kpi_list_api(request):
 #     data = [
