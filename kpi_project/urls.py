@@ -21,7 +21,7 @@ from kpi_app.views import spa_view
 # kpi_project/urls.py = global entry router.
 # kpi_app/urls.py = app‑specific routes, which are included into the project.
 #kpi_project = global configurations for whole site
-#kpi_app = self-contained app
+#kpi_app = self-contained app .
 
 urlpatterns = [
     path('admin/', admin.site.urls),
