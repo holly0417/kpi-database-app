@@ -13,9 +13,9 @@ kpi_library.db
 media/
 staticfiles/
 static_root/
-kpi_project/
-node_modules/
-kpi_app/classifications/
+kpi_project
+node_modules
+kpi_app/classifications
 
 # Virtual environments
 .env
