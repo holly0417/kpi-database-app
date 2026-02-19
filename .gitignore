@@ -7,13 +7,15 @@ __pycache__/
 *.pot
 db.sqlite3
 local_settings.py
-kpi_project/settings.py
 kpi_library.db
 
 # Media & collected static
 media/
 staticfiles/
 static_root/
+kpi_project/
+node_modules/
+kpi_app/classifications/
 
 # Virtual environments
 .env

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import KPI
+from .models import KPI, KPIIndustry, Benchmark
 
 class KPISerializer(serializers.ModelSerializer):
     class Meta:
