@@ -11,7 +11,9 @@
           <q-input filled v-model="formData.description" label="Description" stack-label :dense="true" />
           <q-input filled v-model="formData.formula" label="Formula" stack-label :dense="true" />
           <q-input filled v-model="formData.unit" label="Unit" stack-label :dense="true" />
-          <q-input filled v-model="formData.direction" label="Direction" stack-label :dense="true" />
+          <q-radio v-model="formData.direction" emit-value val="up" label="Up" @update:model-value="setDirection" />
+          <q-radio v-model="formData.direction" emit-value val="down" label="Down" @update:model-value="setDirection" />
+          <q-radio v-model="formData.direction" emit-value val="target" label="Target" @update:model-value="setDirection" />
           <q-input filled v-model="formData.frequency" label="Frequency" stack-label :dense="true" />
         </div>
     </div>
@@ -101,6 +103,18 @@ const enterNewKPI = async () => {
   }
 };
       
+function setDirection(direction: string) {
+  if(direction == "up") {
+    formData.value.direction = Direction.UP;
+  } 
+  
+  if(direction == "down") {
+    formData.value.direction = Direction.DOWN;
+  }
 
+  if(direction == "target") {
+    formData.value.direction = Direction.TARGET;
+  }
+}
 
 </script>
