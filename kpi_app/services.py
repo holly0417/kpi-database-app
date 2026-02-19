@@ -7,8 +7,20 @@ from pathlib import Path
 from .serializers import KPISerializer
 
 def list_all_kpis():
-    qs = KPI.objects.all()
-    return KPISerializer(qs, many=True).data
+    data = [
+        {
+            "name": k.name,
+            "description": k.description,
+            "formula": k.formula,
+            "unit": k.unit,
+            "direction": k.direction,
+            "frequency": k.frequency
+        }
+        for k in KPI.objects.all()
+    ]
+
+    return data
+
 def list_kpis_for_industry(industry_id):
     from .models import KPIIndustry
     return KPI.objects.filter(kpiindustry__industry_id=industry_id)

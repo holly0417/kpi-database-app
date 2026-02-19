@@ -1,9 +1,11 @@
-requires node to install vue, quasar, js, etc.
-uses vue with quasar framework for frontend. 
-it is an SPA, with the frontend served by the Django backend server. 
+
 
 # setup requirements
 (what is not in this repo but you need to add for this to run)
+requires node to install vue, quasar, js, etc.
+uses vue with quasar framework for frontend. 
+it is an SPA, with the frontend served by the Django backend server. 
+uses python 3.12.1 and django 6.0.1
 
 in another folder under root, files  `settings.py` and `urls.py` should set up the directory to static files as well as the URL setup for SPA.
 

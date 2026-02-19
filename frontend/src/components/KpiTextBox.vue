@@ -16,11 +16,38 @@
         </div>
     </div>
   </q-form>
+  
+  <q-markup-table title="KPIs">
+    <thead>
+      <tr>
+        <th>KPI description</th>
+        <th>formula</th>
+        <th>unit</th>
+        <th>direction</th>
+        <th>frequency</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-for="kpi in thisRows"
+          :key="kpi.name" class="text-center">
+          <td v-text="kpi.description"></td>
+          <td v-text="kpi.formula"></td>
+          <td v-text="kpi.unit"></td>
+          <td v-text="kpi.direction"></td>
+          <td v-text="kpi.frequency"></td>
+      </tr>
+    </tbody>
+
+  </q-markup-table>
+
 </template>
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { QForm } from 'quasar';
 import type { Kpi } from 'src/components/models';
+import { Direction } from 'src/components/models';
+import { addKPI, getKPI } from "src/services/exampleService";
 
 const props = defineProps({
   enterKPI: {
@@ -33,41 +60,47 @@ const props = defineProps({
   },
 })
 
-const thisKpi = ref<Kpi>();
-
 const formData = ref<Kpi>({
   name: '',
   description: '',
   formula: '',
   unit: '',
-  direction: '',
+  direction: Direction.DOWN,
   frequency: ''
 });
 
+
+const thisKpi = ref<Kpi>();
+const thisRows  = ref<Kpi[]>([]);
+
+onMounted(async () => {
+  try {
+    thisRows.value = await getKPI();
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+
 watch(
   () => props.enterKPI,
-  (newVal) => {
+  async (newVal) => {
     if (newVal === true) {
-      enterNewKPI()
+        await enterNewKPI();
     }
   },
   { immediate: true }
 )
 
-function enterNewKPI() {
+
+const enterNewKPI = async () => {
   if (props.enterKPI == true) {
     console.log("successfully called enterNewKPI function");
     thisKpi.value = formData.value;
+    await addKPI(thisKpi.value);
   }
 };
+      
 
-const resetForm = () => {
-  formData.value.name = '';
-  formData.value.description = '';
-  formData.value.formula = '';
-  formData.value.unit = '';
-  formData.value.direction = '';
-  formData.value.frequency = ''
-}
 
 </script>

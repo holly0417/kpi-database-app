@@ -12,12 +12,18 @@ export interface GICSResponse {
   name: string;
 }
 
+export enum Direction {
+  UP = "up",
+  DOWN = "down",
+  TARGET = "target"
+}
+
 export interface Kpi {
   name: string;
   description: string;
   formula: string;
   unit: string;
-  direction: string;
+  direction: Direction;
   frequency: string;
 }
 
@@ -28,4 +34,19 @@ export interface KpiIndustry {
   industry: GICSResponse;
   sub_industry: GICSResponse;
   relevance: string;
+}
+
+export interface Benchmark {
+  kpi: Kpi;
+  sector: GICSResponse;
+  industry_group: GICSResponse;
+  industry: GICSResponse;
+  sub_industry: GICSResponse;
+  geography: string;
+  company: string;
+  period: string;
+  value_type: string;
+  value_low: string;
+  value_high: string;
+  source: string;
 }

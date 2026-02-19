@@ -7,12 +7,12 @@ from pathlib import Path
 from rest_framework import status
 from rest_framework.views import APIView
 
-from .models import Industry, KPI, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
+from .models import Industry, KPI, KPIIndustry, Benchmark, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .services import find_all_sectors, find_industry_group, find_industry, find_subindustry, list_all_kpis
-from .serializers import KPISerializer
+from .services import find_all_sectors, find_industry_group, find_industry, find_subindustry, list_all_kpis, list_kpis_for_industry
+from .serializers import KPISerializer, KPIIndustrySerializer, BenchmarkSerializer
 
 from django.shortcuts import render
 
@@ -70,17 +70,33 @@ class GicsSubIndustryList(APIView):
         return JsonResponse(data, safe=False)
 
 class KPIList(APIView):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         kpis = KPI.objects.all()
         serializer = KPISerializer(kpis, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = KPISerializer(data=request.data)
         if serializer.is_valid():
             kpi = serializer.save()
             return Response(KPISerializer(kpi).data, status=status.HTTP_201_CREATED)
+        print("SERIALIZER ERRORS:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class KPIIndustryList(APIView):
+#     def get(self, request):
+#         kpi_industry = KPIIndustry.objects.all()
+#         serializer = KPIIndustrySerializer(kpi_industry, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = KPISerializer(data=request.data)
+#         if serializer.is_valid():
+#             kpi = serializer.save()
+#             return Response(KPISerializer(kpi).data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 # def kpi_list_api(request):
 #     data = [

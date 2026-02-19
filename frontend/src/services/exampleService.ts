@@ -1,8 +1,18 @@
 import { api } from "src/boot/axios";
-import type { GICSResponse } from "src/components/models";
+import type { GICSResponse, Kpi } from "src/components/models";
 
 export interface ExampleResponse {
   message: string;
+}
+
+export async function addKPI(KpiDTO: Kpi): Promise<Kpi> {
+  const response = await api.post<Kpi>("kpis/", KpiDTO); // POST
+  return response.data;
+}
+
+export async function getKPI(): Promise<Kpi[]> {
+  const response = await api.get<Kpi[]>("kpis/"); 
+  return response.data;
 }
 
 export async function fetchExample(): Promise<ExampleResponse> {
