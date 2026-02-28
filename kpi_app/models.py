@@ -73,7 +73,9 @@ class KPIIndustry(models.Model):
     sub_industry = models.ForeignKey(GICSSubIndustry, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ("kpi", "sub_industry")
+        constraints = [
+            models.UniqueConstraint(fields=["kpi", "sub_industry"], name="unique_kpi_subindustry")
+        ]
 
 
 class Benchmark(models.Model):

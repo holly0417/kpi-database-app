@@ -2,6 +2,7 @@ from rest_framework import serializers
 from kpi_app.models import KPI, KPIIndustry, Benchmark, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
 
 #here we explicitly define which fields we want to have in the API output
+
 class GICSSectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = GICSSector
@@ -14,6 +15,7 @@ class GICSIndustryGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = GICSIndustryGroup
         fields = ["id", "code", "name", "sector"]
+
 class GICSIndustrySerializer(serializers.ModelSerializer):
     industry_group = serializers.PrimaryKeyRelatedField(
         queryset=GICSIndustryGroup.objects.all()

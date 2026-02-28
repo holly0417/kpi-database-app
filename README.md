@@ -26,7 +26,7 @@ since I've set up the frontend (using Quasar Framework) as an SPA served by the 
 In `kpi_project` > `settings.py`, make sure your `BASE_DIR` is set to your project root directory.
 Pay special mind to `STATIC_URL` and `STATICFILES_DIRS` for setting up SPA and `DATABASES` for setting up SQLite3. (or whatever database you prefer)
 ```
-
+import os
 from pathlib import Path
 
 # base directory: our root directory
@@ -36,7 +36,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = <some auto-generated secret key from when this Django app was first made>
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = []
 
