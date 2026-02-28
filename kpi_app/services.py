@@ -2,8 +2,7 @@ from typing import Any
 from django.http import Http404
 
 from kpi_app.models import KPI, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry, KPIIndustry
-from .serializers import (KPISerializer, KPIIndustrySerializer,
-                          GICSSectorSerializer, GICSIndustryGroupSerializer,
+from .serializers import (GICSSectorSerializer, GICSIndustryGroupSerializer,
                           GICSIndustrySerializer, GICSSubIndustrySerializer)
 
 def list_all_sectors():
@@ -49,12 +48,12 @@ def find_industry(industry_group_code: str) -> list[dict[str, Any]]:
     return serializer.data
 
 
-def find_subindustry(industry_code: str) -> list[str]:
+def find_subindustry(industry_code: str) -> list[dict]:
     raw_data = GICSSubIndustry.objects.filter(industry__code=industry_code)
     serializer = GICSSubIndustrySerializer(raw_data, many=True)
     return serializer.data
 
-def get_all_GICS_layers_by_subindustry(subindustry_code: str):
+def get_all_gics_layers_by_subindustry(subindustry_code: str):
     try:
         chosen_subindustry = GICSSubIndustry.objects.get(code=subindustry_code)
         industry = chosen_subindustry.industry

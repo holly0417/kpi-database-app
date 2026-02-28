@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from kpi_app.models import KPI, KPIIndustry, GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
 
 from rest_framework.response import Response
-from .services import list_all_sectors, find_industry_group, find_industry, find_subindustry, get_all_GICS_layers_by_subindustry, list_all_kpis_industry
+from .services import list_all_sectors, find_industry_group, find_industry, find_subindustry, get_all_gics_layers_by_subindustry, list_all_kpis_industry
 from .serializers import KPISerializer, KPIIndustrySerializer, GICSSectorSerializer
 
 # Create your views here.
@@ -39,11 +39,6 @@ def spa_view(request, resource_path: str = ""):
 
     return FileResponse(index_path.open("rb"), content_type="text/html")
 
-
-# def home(request):
-#     # You can pass data to the template here
-#     return render(request, "home.html")
-# #
 class GicsSectorList(APIView):
     def get(self, request):
         return Response(list_all_sectors())
@@ -91,8 +86,8 @@ class KPIList(APIView):
 
 class KPIIndustryList(APIView):
     def get(self, request, *args, **kwargs):
-        kpiIndustry = KPIIndustry.objects.all()
-        serializer = KPIIndustrySerializer(kpiIndustry, many=True)
+        kpi_industry = KPIIndustry.objects.all()
+        serializer = KPIIndustrySerializer(kpi_industry, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -109,7 +104,7 @@ class GICSLayersBySubIndustry(APIView):
         sub_industry_code = request.query_params.get("sub_industry_code")
         if not sub_industry_code:
             return Response({"error": "sub_industry_code is required"}, status=400)
-        data = get_all_GICS_layers_by_subindustry(str(sub_industry_code))
+        data = get_all_gics_layers_by_subindustry(str(sub_industry_code))
         return Response(data)
 
 class AllKPIsListedByName(APIView):
@@ -117,14 +112,3 @@ class AllKPIsListedByName(APIView):
         data = list_all_kpis_industry()
         return Response(data)
 
-# def kpi_list_api(request):
-#     data = [
-#         {
-#             "id": k.id,
-#             "name": k.name,
-#             "unit": k.unit,
-#             "direction": k.direction,
-#         }
-#         for k in KPI.objects.all()
-#     ]
-#     return JsonResponse(data, safe=False)

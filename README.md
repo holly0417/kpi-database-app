@@ -8,6 +8,7 @@ I'm using the Django Framework for ORM and using it to support an SQLite3 databa
 For development, I've been using PyCharm for the backend and Visual Studio Code for the frontend.
 You'll need to activate a virtual environment first to be able to run this. 
 
+# setting up virtual environment
 If you're running Windows, install `python` and inside your project root directory, 
 create the virtual environment folder via: `python -m venv venv`. Then activate the 
 virtual environment with: `venv\Scripts\activate`
@@ -16,124 +17,19 @@ For Mac/Linux, install `python3`. Install the python3-venv package with this com
 `sudo apt install python3.13-venv` and create the virtual environment folder via: `python3 -m venv venv`.
 Then activate the virtual environment with: `source venv/bin/activate`.
 
+# install dependencies and configure settings
 Install the necessary dependencies by running this command: `pip install -r requirements.txt`
 Go to the frontend directory: `cd frontend` and install pnpm: `pnpm install`
 
-In `kpi_project`, my configurations are set. You just need to create your own `settings.py` file inside and set your configurations as needed.
-Most of this stuff was automatically set up when I created the Django app. However, there's a few extra details that need to be addec
+In `kpi_project`, you can create your own `settings.py` file inside and set your configurations as needed.
+I have a `settings.py.example` file there that you can use as a base for setting up the dependencies/configurations.
+Most of this stuff was automatically set up when I created the Django app. However, there's a few extra details that need to be added
 since I've set up the frontend (using Quasar Framework) as an SPA served by the Django backend server.
 
 In `kpi_project` > `settings.py`, make sure your `BASE_DIR` is set to your project root directory.
 Pay special mind to `STATIC_URL` and `STATICFILES_DIRS` for setting up SPA and `DATABASES` for setting up SQLite3. (or whatever database you prefer)
-```
-import os
-from pathlib import Path
 
-# base directory: our root directory
-BASE_DIR = Path(__file__).resolve().parent.parent 
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = <some auto-generated secret key from when this Django app was first made>
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
-
-ALLOWED_HOSTS = []
-
-# Application definition
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'kpi_app',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'kpi_project.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'kpi_project.wsgi.application'
-
-
-# Database
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "kpi_library.db",
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "frontend" / "dist" / "spa",  # contains index.html, js, css
-]
-```
-
-Set up database with: `python manage.py migrate`
+Set up the database by running: `python manage.py migrate`
 
 Go to the frontend directory: `cd frontend`
 Build the frontend: `pnpm run build`

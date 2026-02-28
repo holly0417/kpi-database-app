@@ -53,24 +53,24 @@ class KPI(models.Model):
     ]
 
     name = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
-    formula = models.TextField(blank=True, null=True)
-    unit = models.CharField(max_length=50, blank=True, null=True)
+    description = models.TextField(blank=True, default="")
+    formula = models.TextField(blank=True, default="")
+    unit = models.CharField(max_length=50, blank=True, default="")
     direction = models.CharField(
-        max_length=10, choices=DIRECTION_CHOICES, blank=True, null=True
+        max_length=10, choices=DIRECTION_CHOICES, blank=True
     )
-    frequency = models.CharField(max_length=50, blank=True, null=True)
+    frequency = models.CharField(max_length=50, blank=True, default="")
 
     def __str__(self):
         return self.name
 
 
 class KPIIndustry(models.Model):
-    kpi = models.ForeignKey(KPI, on_delete=models.CASCADE)
-    sector = models.ForeignKey(GICSSector, on_delete=models.CASCADE)
-    industry_group = models.ForeignKey(GICSIndustryGroup, on_delete=models.CASCADE)
-    industry = models.ForeignKey(GICSIndustry, on_delete=models.CASCADE)
-    sub_industry = models.ForeignKey(GICSSubIndustry, on_delete=models.CASCADE)
+    kpi = models.ForeignKey(KPI, on_delete=models.CASCADE, related_name="industry_categorization")
+    sector = models.ForeignKey(GICSSector, on_delete=models.CASCADE, related_name="industry_categorization")
+    industry_group = models.ForeignKey(GICSIndustryGroup, on_delete=models.CASCADE, related_name="industry_categorization")
+    industry = models.ForeignKey(GICSIndustry, on_delete=models.CASCADE, related_name="industry_categorization")
+    sub_industry = models.ForeignKey(GICSSubIndustry, on_delete=models.CASCADE, related_name="industry_categorization")
 
     class Meta:
         constraints = [
@@ -79,11 +79,11 @@ class KPIIndustry(models.Model):
 
 
 class Benchmark(models.Model):
-    kpi = models.ForeignKey(KPI, on_delete=models.CASCADE)
-    sector = models.ForeignKey(GICSSector, null=True, blank=True, on_delete=models.SET_NULL)
-    industry_group = models.ForeignKey(GICSIndustryGroup, null=True, blank=True, on_delete=models.SET_NULL)
-    industry = models.ForeignKey(GICSIndustry, null=True, blank=True, on_delete=models.SET_NULL)
-    sub_industry = models.ForeignKey(GICSSubIndustry, null=True, blank=True, on_delete=models.SET_NULL)
+    kpi = models.ForeignKey(KPI, on_delete=models.CASCADE, related_name="benchmark_info")
+    sector = models.ForeignKey(GICSSector, null=True, blank=True, on_delete=models.SET_NULL, related_name="benchmark_info")
+    industry_group = models.ForeignKey(GICSIndustryGroup, null=True, blank=True, on_delete=models.SET_NULL, related_name="benchmark_info")
+    industry = models.ForeignKey(GICSIndustry, null=True, blank=True, on_delete=models.SET_NULL, related_name="benchmark_info")
+    sub_industry = models.ForeignKey(GICSSubIndustry, null=True, blank=True, on_delete=models.SET_NULL, related_name="benchmark_info")
     geography = models.CharField(max_length=100, blank=True, null=True)
     company = models.CharField(max_length=100, blank=True, null=True)
     period = models.CharField(max_length=50, blank=True, null=True)

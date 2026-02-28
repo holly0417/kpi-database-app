@@ -2,8 +2,10 @@ from django.core.management.base import BaseCommand
 import pandas as pd
 from kpi_app.models import GICSSector, GICSIndustryGroup, GICSIndustry, GICSSubIndustry
 import numpy as np
+from pathlib import Path
 
-GICS = "kpi_app/classifications/GICS CLEANED V1.xlsx"
+BASE_DIR = Path(__file__).resolve().parent.parent
+GICS = BASE_DIR / "kpi_app" / "classifications" / "GICS CLEANED V1.xlsx"
 
 # excel column: model column
 sector_column_map = {
