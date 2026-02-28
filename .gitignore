@@ -1,0 +1,55 @@
+# --- Python / Django ---
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.log
+*.pot
+db.sqlite3
+local_settings.py
+kpi_library.db
+
+# Media & collected static
+media/
+staticfiles/
+static_root/
+kpi_project/settings.py
+node_modules
+kpi_app/inspect_db.py
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# --- IDE / editor ---
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Tests / coverage ---
+.pytest_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+.eggs/
+
+# AI crap
+CLAUDE.md
+.claude
+SKILLS.md
+REVIEW_BACKEND.md
+REVIEW_FRONTEND.md
+REVIEW_FULLSTACK.md
